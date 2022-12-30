@@ -22,14 +22,22 @@ package: build
 	cd bin/ && zip -r lambda-extension-log-shipper.zip extensions/
 	cd bin/examples && zip ../hello-lambda-extension.zip bootstrap
 
-deploy-layer-%: package
-	aws lambda publish-layer-version --layer-name "lambda-extension-log-shipper" --region $* --zip-file  "fileb://bin/lambda-extension-log-shipper.zip"
+# deploy-layer-%: package
+# 	aws lambda publish-layer-version --layer-name "lambda-extension-log-shipper" --region $* --zip-file  "fileb://bin/lambda-extension-log-shipper.zip"
 
-deploy-examples-%: package
-	aws lambda update-function-code --function-name hello-lambda-extension --region $* --zip-file "fileb://bin/hello-lambda-extension.zip"
-	aws lambda list-layer-versions --layer-name lambda-extension-log-shipper --max-items 1 | \
-	jq -r '.LayerVersions[0].LayerVersionArn' | \
-	xargs -I{} aws lambda update-function-configuration --function-name hello-lambda-extension --region $* --layers {}
+deploy: package
+	@echo "deploying..."
+	@./deploy.sh
+
+hello:
+	# MESSAGE := $(shell ls)
+	@echo $(MY_VAR)
+
+# deploy-examples-%: package
+# 	aws lambda update-function-code --function-name hello-lambda-extension --region $* --zip-file "fileb://bin/hello-lambda-extension.zip"
+# 	aws lambda list-layer-versions --layer-name lambda-extension-log-shipper --max-items 1 | \
+# 	jq -r '.LayerVersions[0].LayerVersionArn' | \
+# 	xargs -I{} aws lambda update-function-configuration --function-name hello-lambda-extension --region $* --layers {}
 
 clean:
 	@rm -rf bin/

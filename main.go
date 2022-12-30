@@ -15,6 +15,7 @@ import (
 	"github.com/david7482/lambda-extension-log-shipper/extension"
 	"github.com/david7482/lambda-extension-log-shipper/forwardservice"
 	"github.com/david7482/lambda-extension-log-shipper/forwardservice/forwarders/newrelic"
+	"github.com/david7482/lambda-extension-log-shipper/forwardservice/forwarders/s3"
 	"github.com/david7482/lambda-extension-log-shipper/forwardservice/forwarders/stdout"
 	"github.com/david7482/lambda-extension-log-shipper/logservice"
 )
@@ -33,7 +34,7 @@ const (
 var (
 	extensionName = filepath.Base(os.Args[0]) // extension name has to match the filename
 	logTypes      = []extension.LogType{extension.Platform, extension.Function}
-	forwarders    = []forwardservice.Forwarder{stdout.New(), newrelic.New()}
+	forwarders    = []forwardservice.Forwarder{stdout.New(), newrelic.New(), s3.New()}
 )
 
 type generalConfig struct {
